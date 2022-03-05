@@ -50,6 +50,9 @@ export default class ImageViewer extends React.Component<Props, State> {
 
   public componentDidMount() {
     this.init(this.props);
+    if(this.props.enablePreload){
+      this.preloadImage(this.state.currentShowIndex || 0);
+    }
   }
 
   static getDerivedStateFromProps(nextProps: Props, prevState: State) {
@@ -72,6 +75,10 @@ export default class ImageViewer extends React.Component<Props, State> {
         duration: 200,
         useNativeDriver: !!this.props.useNativeDriver
       }).start();
+    }
+
+    if(prevState.currentShowIndex !== this.state.currentShowIndex && this.props.enablePreload){
+      this.preloadImage(this.state.currentShowIndex || 0);
     }
   }
 
@@ -532,9 +539,7 @@ export default class ImageViewer extends React.Component<Props, State> {
               ...image.props.source
             };
           }
-          if (this.props.enablePreload) {
-            this.preloadImage(this.state.currentShowIndex || 0);
-          }
+          
           return (
             <ImageZoom
               key={index}
